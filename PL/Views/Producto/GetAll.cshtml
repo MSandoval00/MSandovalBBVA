@@ -1,0 +1,55 @@
+﻿@model ML.Producto
+@{
+    ViewBag.Title = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.3.4/tailwind.min.css" rel="stylesheet" />
+@if (Model.Productos.Count > 0)
+{
+    <div class="flex items-center " style="font-family: 'Muli', sans-serif;">
+        <div class="container ml-auto mr-auto flex flex-wrap items-start">
+            <div class="text-center w-full pl-5 lg:pl-2 mb-4 mt-4">
+                <h1 class="text-3xl lg:text-4xl text-gray-700 font-extrabold">
+                    Productos Disponibles
+                </h1>
+                <br />
+            </div> 
+            <hr />
+            @foreach (ML.Producto producto in Model.Productos)
+            {
+                <div class="w-full md:w-1/2 lg:w-1/4 pl-5 pr-5 mb-5 lg:pl-2 lg:pr-2">
+                    <div class="bg-white rounded-lg m-h-64 p-2 transform hover:translate-y-2 hover:shadow-xl transition duration-300">
+                        <figure class="mb-2">
+                            <img src="https://img.freepik.com/vector-premium/dibujos-animados-productos-supermercado_24640-55628.jpg" alt="" class="h-64 ml-auto mr-auto" />
+                        </figure>
+                        <div class="rounded-lg p-4 bg-purple-700 flex flex-col">
+                            <div>
+                                <h5 class="text-white text-2xl font-bold leading-none">
+                                    @producto.Nombre
+                                </h5>
+                                <span class="text-xs text-gray-400 leading-none">Tipo: @producto.TipoProducto</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="text-lg text-white font-light">
+                                    $ @producto.Precio
+                                </div>
+                                    <a class="btn btn-info rounded-full bg-purple-900 text-white hover:bg-white hover:text-purple-900 hover:shadow-xl focus:outline-none w-10 h-10 flex ml-auto transition duration-300" href="@Url.Action("ComprarProducto", "Producto", new { IdProducto = producto.IdProducto })">
+                                        <span class="glyphicon glyphicon-shopping-cart"></span>
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        No hay registros de productos.
+    </div>
+}
+

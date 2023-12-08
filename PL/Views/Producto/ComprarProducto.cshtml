@@ -1,0 +1,100 @@
+﻿@model ML.Producto
+@{
+    ViewBag.Title = "ComprarProducto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/form/formulario.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<h2>Producto seleccionado</h2>
+<hr />
+@if (Model.IdProducto == 0)
+{
+<div class="alert alert-danger" role="alert">
+    No hay producto seleccionado.
+</div>
+}
+else
+{
+ 
+    <div class="container">
+        <form id="contact">
+            <h3>Producto Seleccionado</h3>
+            <fieldset>
+                <input placeholder="Nombre Completo" type="text" id="txtNombre" tabindex="1" required autofocus>
+            </fieldset>
+            <fieldset>
+                <input placeholder="Valor del billete" id="txtMonto" type="text" tabindex="2" required autofocus>
+                <div id="Monedas"></div>
+                <input type="button" class="btn btn-info" id="contact-submit" onclick="Capturar(); mostrarMonedas();" value="Agregar" />
+            </fieldset>
+            <fieldset>
+                @Html.TextBoxFor(Model => Model.Nombre, new { @tabindex = "3",@readonly="readonly" })
+            </fieldset>
+            <fieldset>
+                @Html.TextBoxFor(Model => Model.Precio, new { @tabindex = "4", @readonly = "readonly", @id="txtPrecio"})
+            </fieldset>
+            <fieldset>
+                @Html.TextBoxFor(Model => Model.TipoProducto, new { @tabindex = "5", @readonly = "readonly" })
+            </fieldset>
+
+            <fieldset>
+                <input type="button" class="btn btn-info" id="contact-submit" onclick="CalcularCambio();" value="Calcular"/>
+                @*<button class="btn btn-info" name="submit" id="contact-submit" onclick="CalcularCambio();">Submit</button>*@
+            </fieldset>
+        </form>
+    </div>
+}
+<script>
+    monedasIntroducidas = [];
+    var cambioUno = 10;
+    var cambioDos = 50;
+    var cambioTres = 100;
+    var monto = document.getElementById("txtMonto").value;
+
+    function CalcularCambio() {
+        let totalMonedas = 0, lstMonedas.length;
+        lstMonedas.forEach(function (a) { totalMonedas += a; });
+        console.log(totalMonedas);
+
+        var cambio = 0;
+        var cambioAlmacenado = 0;
+        var nombre = document.getElementById("txtNombre").value;
+        var precio = document.getElementById("txtPrecio").value;
+        if (listaMonedas < precio) {
+            Swal.fire({
+                title: "<i>Falta más monto</i>",
+                html: "Monto Insuficiente:"+ "<b> El precio del producto es: " + precio + "</b>",
+                confirmButtonText: "<u>Continuar.</u>",
+            });
+         /*   alert("El monto ingresado es de: " + monto + " es menor al precio del producto :" + precio);*/
+        } else {
+            if (listaMonedas > cambioTres) {
+                for (var iteraciones = 0; iteraciones < listaMonedas.length; iteraciones++) {
+                    cambio = monto - cambioTres;
+                    monto = cambio;
+                    alert("Cambio: " +cambioTres);
+                }
+            } else if (monto > cambioDos) {
+
+            } else {
+
+            }
+        }
+    }
+    var lstMonedas = new Array();
+    function Capturar() {
+        var monto = document.getElementById("txtMonto").value;
+        lstMonedas.push(monto);
+        Swal.fire({
+            title: "<i>Moneda Registrada</i>",
+            html: "Valor:" +"<b>"+lstMonedas.length+"</b>",
+            confirmButtonText: "<u>Continuar.</u>",
+        });
+        /*alert("Moneda registrada es la: "+lstMonedas.length);*/
+    }
+    function mostrarMonedas() {
+        for (var i = 0; i < lstMonedas.length; i++) {
+            document.getElementById('Monedas').innerHTML = lstMonedas[i] + '<br>';
+        }
+    }
+</script>
