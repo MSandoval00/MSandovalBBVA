@@ -37,5 +37,106 @@ namespace PL.Controllers
             
             return View(producto);
         }
+        [HttpPost]
+        public ActionResult ComprarProducto(int monedasIngresadas, int IdProducto)
+        {
+            int IdMoneda = 1;
+            ML.Result result = BL.Producto.GetById(IdProducto);
+            ML.Producto producto = (ML.Producto)result.Object;
+            if (producto.Precio<=monedasIngresadas)
+            {
+                int cambio = monedasIngresadas - producto.Precio;
+                if (cambio > 0)
+                {
+
+                    ML.Result resultDenominaciones = BL.Cambio.GetById(IdMoneda);
+                    ML.Cambio denominaciones = (ML.Cambio)result.Object;
+                    Denominaciones(cambio,denominaciones);
+                    if (cambio==(denominaciones.Monedas10*10+denominaciones.Billetes50*50+denominaciones.Billetes100*100))
+                    {
+                        ML.Compra compra = new ML.Compra();
+                        compra.Producto = new ML.Producto();
+                        compra.Producto.IdProducto = IdProducto;
+                        compra.Ingreso = monedasIngresadas;
+                        compra.Cambio = cambio;
+
+                        ML.Result resultOperacion = BL.Compra.Add(compra);
+                        if (resultOperacion.Correct)
+                        {
+                            ViewBag.Mensaje=$"Gracias por la compra: Tu cambio es:{cambio} \n Moneda de 10:{denominaciones.Monedas10}" +
+                                $"\n Billetes de cincuenta: {denominaciones.Billetes50}" +
+                                $"\n Billetes de cien: {denominaciones.Billetes100}";
+                        }
+                        else
+                        {
+                            ViewBag.Mensaje = resultOperacion.ErrorMessage;
+                        }
+
+                    }
+                    else
+                    {
+                        ViewBag.Mensaje = "La maquina no cuenta con el suficiente cambio";
+                    }
+                }
+                else
+                {
+                    ML.Compra compra = new ML.Compra();
+                    compra.Producto = new ML.Producto();
+                    compra.Producto.IdProducto = IdProducto;
+                    compra.Ingreso= monedasIngresadas;
+                    compra.Cambio= cambio;
+                    ML.Result resultOperacion = BL.Compra.Add(compra);
+                    if (resultOperacion.Correct)
+                    {
+                        ViewBag.Mensaje = "Gracias por la compra";
+                    }
+                    else
+                    {
+                        ViewBag.Mensaje = resultOperacion.ErrorMessage;
+                    }
+                }
+            }
+            else
+            {
+                ViewBag.Mensaje = "El dinero no es suficiente";
+            }
+            return PartialView("Modal");
+        }
+        public ML.Cambio Denominaciones(int cambioDevolver,ML.Cambio cambio)
+        {
+            Dictionary  <int, int> monedasDisponibles=new Dictionary<int, int>
+            {
+                { 100, cambio.Billetes100},
+                { 50,cambio.Billetes50},
+                { 10,cambio.Monedas10}
+            };
+            List<int> denominaciones = new List<int>(monedasDisponibles.Keys);
+            Dictionary<int, int> resultado = new Dictionary<int, int>
+            {
+                { 100, 0 },
+                { 50, 0 },
+                { 10, 0}
+            };
+            foreach (var denominacion in denominaciones)
+            {
+               int Disponible=monedasDisponibles[denominacion];
+                int cantidadMonedas = Math.Min(cambioDevolver / denominacion, Disponible);
+                if (cantidadMonedas>0)
+                {
+                    resultado[denominacion] += cantidadMonedas;
+                    cambioDevolver -= cantidadMonedas * denominacion;
+                    monedasDisponibles[denominacion] -= cantidadMonedas;
+                    if (cambioDevolver==0)
+                    {
+                        break;
+                    }
+                }
+            }
+            cambio.Billetes100 = resultado[100];
+            cambio.Billetes50=resultado[50];
+            cambio.Monedas10 = resultado[10];
+            return cambio;
+        }
+
     }
 }

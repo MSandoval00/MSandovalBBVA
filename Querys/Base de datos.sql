@@ -22,3 +22,14 @@ Nombre,
 Precio,
 TipoProducto
 FROM Productos
+
+CREATE PROCEDURE ProductoGetById 
+@IdProducto INT
+AS
+SELECT 
+IdProducto,
+Nombre,
+Precio,
+TipoProducto
+FROM Productos
+WHERE IdProducto=@IdProducto

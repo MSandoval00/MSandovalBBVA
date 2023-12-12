@@ -76,6 +76,7 @@ namespace BL
                     adapter.Fill(tablaProducto);
                     if (tablaProducto.Rows.Count>0)
                     {
+                        result.Object = tablaProducto.Rows[0];
                         DataRow row = tablaProducto.Rows[0];
                         ML.Producto producto = new ML.Producto();
                         producto.IdProducto = int.Parse(row[0].ToString());
