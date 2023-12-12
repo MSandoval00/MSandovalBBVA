@@ -38,7 +38,7 @@ namespace PL.Controllers
             return View(producto);
         }
         [HttpPost]
-        public ActionResult ComprarProducto(int monedasIngresadas, int IdProducto)
+        public ActionResult ComprarProducto(int monedasIngresadas, int IdProducto, string NombreUsuario)
         {
             int IdMoneda = 1;
             ML.Result result = BL.Producto.GetById(IdProducto);
@@ -50,7 +50,7 @@ namespace PL.Controllers
                 {
 
                     ML.Result resultDenominaciones = BL.Cambio.GetById(IdMoneda);
-                    ML.Cambio denominaciones = (ML.Cambio)result.Object;
+                    ML.Cambio denominaciones = (ML.Cambio)resultDenominaciones.Object;
                     Denominaciones(cambio,denominaciones);
                     if (cambio==(denominaciones.Monedas10*10+denominaciones.Billetes50*50+denominaciones.Billetes100*100))
                     {
@@ -59,6 +59,8 @@ namespace PL.Controllers
                         compra.Producto.IdProducto = IdProducto;
                         compra.Ingreso = monedasIngresadas;
                         compra.Cambio = cambio;
+                        compra.Total=producto.Precio;
+                        compra.Nombre = NombreUsuario;
 
                         ML.Result resultOperacion = BL.Compra.Add(compra);
                         if (resultOperacion.Correct)

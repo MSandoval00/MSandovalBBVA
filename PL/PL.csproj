@@ -166,6 +166,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Producto\GetAll.cshtml" />
     <Content Include="Views\Producto\ComprarProducto.cshtml" />
+    <Content Include="Views\Producto\Modal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

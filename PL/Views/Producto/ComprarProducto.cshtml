@@ -22,10 +22,11 @@ else
             {
             <h3>Producto Seleccionado</h3>
             <fieldset>
-                <input placeholder="Nombre Completo" type="text" id="txtNombre" tabindex="1" required autofocus>
+                @Html.HiddenFor(model=>Model.IdProducto)
+                <input placeholder="Nombre Completo" type="text" id="txtNombre" name="NombreUsuario" tabindex="1" required autofocus>
             </fieldset>
             <fieldset>
-                <input placeholder="Valor del billete" id="txtMonto" type="text" tabindex="2" required autofocus>
+                <input placeholder="Valor del billete" id="txtMonto" name="monedasIngresadas" type="text" tabindex="2" required autofocus>
                 @*<div id="Monedas"></div>
                 <input type="button" class="btn btn-info" id="contact-submit" value="Agregar" />*@
                 @*<input type="button" class="btn btn-info" id="contact-submit" onclick="Capturar(); mostrarMonedas();" value="Agregar" />*@

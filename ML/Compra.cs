@@ -13,6 +13,7 @@ namespace ML
         public int Total { get; set; }
         public int Ingreso{ get; set; }
         public int Cambio { get; set; }
+        public string Nombre { get; set; }
         public List<object> Compras { get; set; }
     }
 }
